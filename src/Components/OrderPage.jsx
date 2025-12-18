@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import API_BASE_URL from "../api";
 
 const OrderPage = () => {
+  const navigate = useNavigate();
   const [items, setItems] = useState([]);
 
   useEffect(() => {
@@ -10,11 +12,15 @@ const OrderPage = () => {
       try {
         const token = sessionStorage.getItem("token");
         if (!token) return;
-        const res = await axios.get("https://femine-backend.onrender.com/orders", {
+        const res = await axios.get(`${API_BASE_URL}/orders`, {
           headers: { Authorization: `Bearer ${token}` }
         });
+
+        // Ensure we handle the { orders: [...] } response structure
+        const ordersArray = res.data.orders || [];
+
         // Flatten the orders to get a list of products
-        const allItems = res.data.flatMap(order =>
+        const allItems = ordersArray.flatMap(order =>
           order.products.map(p => {
             if (!p.product) return null;
             return {
@@ -28,10 +34,14 @@ const OrderPage = () => {
         setItems(allItems);
       } catch (err) {
         console.error("Error fetching orders", err);
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear();
+          navigate("/login");
+        }
       }
     }
     fetchOrders();
-  }, []);
+  }, [navigate]);
 
   const subtotal = items.reduce((sum, item) => sum + (item.sellingPrice * item.qty), 0);
   const shipping = items.length > 0 ? 5.99 : 0;

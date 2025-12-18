@@ -1,4 +1,5 @@
 import { useState } from "react";
+import API_BASE_URL from "../api";
 
 const ProductForm = () => {
 
@@ -50,7 +51,7 @@ const ProductForm = () => {
         console.log("Submitting product:", productData);
 
         try {
-            const response = await fetch('https://femine-backend.onrender.com/products', {
+            const response = await fetch(`${API_BASE_URL}/products`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

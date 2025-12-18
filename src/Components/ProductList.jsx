@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
+import API_BASE_URL from "../api";
 const ProductList = () => {
 
     const [products, setProducts] = useState([]);
     useEffect(() => {
         const fetchData = async () => {
-            const response = await fetch("https://femine-backend.onrender.com/products")
+            const response = await fetch(`${API_BASE_URL}/products`)
             const json = await response.json()
 
             setProducts(json)

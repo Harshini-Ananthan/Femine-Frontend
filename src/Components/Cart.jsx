@@ -1,21 +1,26 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import API_BASE_URL from "../api";
 
 const Cart = () => {
-
+  const navigate = useNavigate();
   const [items, setItems] = useState([]);
 
   const fetchCart = async () => {
     try {
       const token = sessionStorage.getItem("token");
       if (!token) return;
-      const response = await axios.get("https://femine-backend.onrender.com/cart", {
+      const response = await axios.get(`${API_BASE_URL}/cart`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setItems(response.data);
     } catch (err) {
       console.error("Error fetching cart", err);
+      if (err.response && err.response.status === 401) {
+        sessionStorage.clear();
+        navigate("/login");
+      }
     }
   }
 

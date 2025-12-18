@@ -1,25 +1,22 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
-import axios from "axios"
+import axios from "axios";
+import API_BASE_URL from "../api";
 
 const LoginForm = () => {
-
     const [username, setUsername] = useState('');
     const handleNameChange = (e) => {
         setUsername(e.target.value);
     }
-    console.log(username)
 
-    const passwordRef = useRef('')
-    console.log(passwordRef.current.value)
+    const passwordRef = useRef(null)
     const navigate = useNavigate()
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(username, passwordRef.current.value);
         try {
-            const { data } = await axios.post('https://femine-backend.onrender.com/auth/login', {
+            const { data } = await axios.post(`${API_BASE_URL}/auth/login`, {
                 email: username,
                 password: passwordRef.current.value
             })

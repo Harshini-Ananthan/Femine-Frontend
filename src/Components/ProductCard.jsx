@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router";
 import axios from "axios";
 import { toast } from "react-toastify";
+import API_BASE_URL from "../api";
 
 const ProductCard = (props) => {
     const { name, sellingPrice, originalPrice, image, id } = props
@@ -16,14 +17,20 @@ const ProductCard = (props) => {
                 toast.error("Please login to add to cart");
                 return;
             }
-            await axios.post("https://femine-backend.onrender.com/cart",
+            await axios.post(`${API_BASE_URL}/cart`,
                 { productId: id, quantity: 1 },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             toast.success("Added to cart");
         } catch (err) {
             console.error(err);
-            toast.error("Failed to add to cart");
+            if (err.response && err.response.status === 401) {
+                toast.error("Session expired. Please login again.");
+                sessionStorage.clear();
+                navigate("/login");
+            } else {
+                toast.error("Failed to add to cart");
+            }
         }
     }
 
@@ -36,7 +43,7 @@ const ProductCard = (props) => {
                 toast.error("Please login to place an order");
                 return;
             }
-            await axios.post("https://femine-backend.onrender.com/orders",
+            await axios.post(`${API_BASE_URL}/orders`,
                 { productId: id, quantity: 1 },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -44,7 +51,13 @@ const ProductCard = (props) => {
             navigate("/orders");
         } catch (err) {
             console.error(err);
-            toast.error("Failed to place order");
+            if (err.response && err.response.status === 401) {
+                toast.error("Session expired. Please login again.");
+                sessionStorage.clear();
+                navigate("/login");
+            } else {
+                toast.error("Failed to place order");
+            }
         }
     }
 
