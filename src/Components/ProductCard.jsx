@@ -16,7 +16,7 @@ const ProductCard = (props) => {
                 toast.error("Please login to add to cart");
                 return;
             }
-            await axios.post("http://localhost:3000/cart",
+            await axios.post("https://femine-backend.onrender.com/cart",
                 { productId: id, quantity: 1 },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -36,7 +36,7 @@ const ProductCard = (props) => {
                 toast.error("Please login to place an order");
                 return;
             }
-            await axios.post("http://localhost:3000/orders",
+            await axios.post("https://femine-backend.onrender.com/orders",
                 { productId: id, quantity: 1 },
                 { headers: { Authorization: `Bearer ${token}` } }
             );

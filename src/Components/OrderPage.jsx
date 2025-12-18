@@ -9,7 +9,7 @@ const OrderPage = () => {
       try {
         const token = sessionStorage.getItem("token");
         if (!token) return;
-        const res = await axios.get("http://localhost:3000/orders", {
+        const res = await axios.get("https://femine-backend.onrender.com/orders", {
           headers: { Authorization: `Bearer ${token}` }
         });
         // Flatten the orders to get a list of products

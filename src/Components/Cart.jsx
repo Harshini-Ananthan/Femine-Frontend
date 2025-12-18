@@ -10,7 +10,7 @@ const Cart = () => {
     try {
       const token = sessionStorage.getItem("token");
       if (!token) return;
-      const response = await axios.get("http://localhost:3000/cart", {
+      const response = await axios.get("https://femine-backend.onrender.com/cart", {
         headers: { Authorization: `Bearer ${token}` }
       });
       setItems(response.data);
